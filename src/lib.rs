@@ -20,7 +20,7 @@ pub fn create_project(name: &str, project_type: &str) -> Result<()> {
 }
 
 pub fn create_directories(name: &str) -> Result<()> {
-    let dirs = ["src", "tests", "examples", "benches"];
+    let dirs = ["tests", "examples", "benches"];
     for dir in &dirs {
         let path = format!("{}/{}", name, dir);
         info!("Creating directory: {}", path);
@@ -57,5 +57,34 @@ pub fn add_dependencies(name: &str, dependencies: Option<&str>, dev_dependencies
     }
     fs::write(format!("{}/Cargo.toml", name), cargo_toml).context("Failed to write to Cargo.toml")?;
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_create_project() {
+        let result = create_project("test_project", "bin");
+        assert!(result.is_ok());
+    }
+
+    #[test]
+    fn test_create_directories() {
+        let result = create_directories("test_project");
+        assert!(result.is_ok());
+    }
+
+    #[test]
+    fn test_create_config_files() {
+        let result = create_config_files("test_project", "MIT");
+        assert!(result.is_ok());
+    }
+
+    #[test]
+    fn test_add_dependencies() {
+        let result = add_dependencies("test_project", None, None);
+        assert!(result.is_ok());
+    }
 }
 
